@@ -6,7 +6,6 @@ import (
 	"net/url"
 	"log"
 	"fmt"
-	"os"
 	"io/ioutil"
 	"encoding/json"
 )
@@ -17,19 +16,11 @@ type YoBackYoedClient struct {
 }
 
 type YoBackYoedClientConfig struct {
-	clientInterface.BaseYoedClientConfig
 	ApiKey string `json:"apiKey"`
 }
 
 func (c *YoBackYoedClient) loadConfig(configPath string) (*YoBackYoedClientConfig, error) {
-
-	configFile, err := os.Open(configPath)
-
-	if err != nil {
-		return nil, err
-	}
-
-	configJson, err := ioutil.ReadAll(configFile)
+	configJson, err := clientInterface.ReadConfig(configPath)
 
 	if err != nil {
 		return nil, err
@@ -77,7 +68,12 @@ func NewYoBackYoedClient() (*YoBackYoedClient, error) {
 	}
 
 	c.config = config
-	c.BaseYoedClient.Config = &config.BaseYoedClientConfig
+	baseClient, err := clientInterface.NewBaseYoedClient()
+
+	if err != nil {
+		return nil, err
+	}
+	c.BaseYoedClient = *baseClient
 
 	return c, nil
 }
