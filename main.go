@@ -16,7 +16,7 @@ type YoBackYoedClient struct {
 }
 
 type YoBackYoedClientConfig struct {
-	clientInterface.AbstractYoedClientConfig
+	clientInterface.YoedClientConfig
 	ApiKey string `json:"apiKey"`
 }
 
@@ -67,8 +67,8 @@ func (c *YoBackYoedClient) Handle(username string) {
 	}
 }
 
-func (c *YoBackYoedClient) GetConfig() (*clientInterface.AbstractYoedClientConfig) {
-	return &clientInterface.AbstractYoedClientConfig{Listen:c.Config.Listen, ServerUrl: c.Config.ServerUrl}
+func (c *YoBackYoedClient) GetConfig() (*clientInterface.YoedClientConfig) {
+	return &clientInterface.YoedClientConfig{Listen:c.Config.Listen, ServerUrl: c.Config.ServerUrl}
 }
 
 func NewYoBackYoedClient() (*YoBackYoedClient, error) {
