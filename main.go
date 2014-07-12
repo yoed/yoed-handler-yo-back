@@ -12,11 +12,12 @@ import (
 )
 
 type YoBackYoedClient struct {
-	Config *YoBackYoedClientConfig
+	clientInterface.BaseYoedClient
+	config *YoBackYoedClientConfig
 }
 
 type YoBackYoedClientConfig struct {
-	clientInterface.YoedClientConfig
+	clientInterface.BaseYoedClientConfig
 	ApiKey string `json:"apiKey"`
 }
 
@@ -45,7 +46,7 @@ func (c *YoBackYoedClient) loadConfig(configPath string) (*YoBackYoedClientConfi
 
 func (c *YoBackYoedClient) Handle(username string) {
 	resp, err := http.PostForm("http://api.justyo.co/yo/", url.Values{
-		"api_token": {c.Config.ApiKey},
+		"api_token": {c.config.ApiKey},
 		"username":  {username},
 	})
 
@@ -67,10 +68,6 @@ func (c *YoBackYoedClient) Handle(username string) {
 	}
 }
 
-func (c *YoBackYoedClient) GetConfig() (*clientInterface.YoedClientConfig) {
-	return &clientInterface.YoedClientConfig{Listen:c.Config.Listen, ServerUrl: c.Config.ServerUrl}
-}
-
 func NewYoBackYoedClient() (*YoBackYoedClient, error) {
 	c := &YoBackYoedClient{}
 	config, err := c.loadConfig("./config.json")
@@ -79,7 +76,8 @@ func NewYoBackYoedClient() (*YoBackYoedClient, error) {
 		panic(fmt.Sprintf("failed loading config: %s", err))
 	}
 
-	c.Config = config
+	c.config = config
+	c.BaseYoedClient.Config = &config.BaseYoedClientConfig
 
 	return c, nil
 }
