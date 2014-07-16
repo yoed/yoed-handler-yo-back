@@ -1,41 +1,25 @@
 package main
 
 import (
-	clientInterface "github.com/yoed/yoed-client-interface"
-	"net/http"
-	"net/url"
-	"log"
 	"fmt"
 	"io/ioutil"
-	"encoding/json"
+	"log"
+	"net/http"
+	"net/url"
+
+	clientInterface "github.com/yoed/yoed-client-interface"
 )
 
-type YoBackYoedClient struct {
-	clientInterface.BaseYoedClient
-	config *YoBackYoedClientConfig
+type Handler struct {
+	config *Config
 }
 
-type YoBackYoedClientConfig struct {
-	ApiKey string `json:"apiKey"`
+type Config struct {
+	clientInterface.Config
+	ApiKey string `json:"api_key"`
 }
 
-func (c *YoBackYoedClient) loadConfig(configPath string) (*YoBackYoedClientConfig, error) {
-	configJson, err := clientInterface.ReadConfig(configPath)
-
-	if err != nil {
-		return nil, err
-	}
-
-	config := &YoBackYoedClientConfig{}
-
-	if err := json.Unmarshal(configJson, config); err != nil {
-		return nil, err
-	}
-
-	return config, nil
-}
-
-func (c *YoBackYoedClient) Handle(username string) {
+func (c *Handler) Handle(username string) {
 	resp, err := http.PostForm("http://api.justyo.co/yo/", url.Values{
 		"api_token": {c.config.ApiKey},
 		"username":  {username},
@@ -59,27 +43,19 @@ func (c *YoBackYoedClient) Handle(username string) {
 	}
 }
 
-func NewYoBackYoedClient() (*YoBackYoedClient, error) {
-	c := &YoBackYoedClient{}
-	config, err := c.loadConfig("./config.json")
+func New() *Handler {
 
-	if err != nil {
+	c := &Handler{}
+
+	if err := clientInterface.LoadConfig("./config.json", &c.config); err != nil {
 		panic(fmt.Sprintf("failed loading config: %s", err))
 	}
 
-	c.config = config
-	baseClient, err := clientInterface.NewBaseYoedClient()
-
-	if err != nil {
-		return nil, err
-	}
-	c.BaseYoedClient = *baseClient
-
-	return c, nil
+	return c
 }
 
 func main() {
-	c, _ := NewYoBackYoedClient()
-
-	clientInterface.Run(c)
+	handler := New()
+	client := clientInterface.New(handler, &handler.config.Config)
+	client.Run()
 }
