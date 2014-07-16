@@ -1,7 +1,7 @@
 Yo'ed Yo back
 ===================
 
-A Yo'ed client which Yo back the user who have Yo'ed you.
+A Yo'ed handler which Yo back the user who have Yo'ed you.
 
 #Installation
 You need the [go](http://golang.org) package on your machine to get the source
