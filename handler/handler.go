@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	clientInterface "github.com/yoed/yoed-client-interface"
+	httpInterface "github.com/yoed/yoed-http-interface"
 	"io/ioutil"
 )
 
@@ -13,7 +13,7 @@ type Handler struct {
 }
 
 type Config struct {
-	clientInterface.Config
+	httpInterface.Config
 	ApiKey string `json:"api_key"`
 }
 
@@ -45,7 +45,7 @@ func New() *Handler {
 
 	c := &Handler{}
 
-	if err := clientInterface.LoadConfig("./config.json", &c.Config); err != nil {
+	if err := httpInterface.LoadConfig("./config.json", &c.Config); err != nil {
 		log.Fatalf("failed loading config: %s", err)
 	}
 
