@@ -6,7 +6,7 @@ A Yo'ed client which Yo back the user who have Yo'ed you.
 #Installation
 You need the [go](http://golang.org) package on your machine to get the source
 
-`go get github.com/yoed/yoed-client-yo-back`
+`go get github.com/yoed/yoed-handler-yo-back`
 
 #Configuration
 Create a `config.json` file aside the executable program.
