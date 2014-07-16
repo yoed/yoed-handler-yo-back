@@ -1,4 +1,4 @@
-Yo'ed client Yo back
+Yo'ed Yo back
 ===================
 
 A Yo'ed client which Yo back the user who have Yo'ed you.
