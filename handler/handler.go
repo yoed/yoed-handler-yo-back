@@ -14,16 +14,16 @@ type Handler struct {
 
 type Config struct {
 	httpInterface.Config
-	ApiKey string `json:"api_key"`
+	ApiKeys map[string]string `json:"api_keys"`
 }
 
-func (c *Handler) Handle(username string) {
+func (c *Handler) Handle(username, handle string) {
 	resp, err := http.PostForm("http://api.justyo.co/yo/", url.Values{
-		"api_token": {c.Config.ApiKey},
+		"api_token": {c.Config.ApiKeys[handle]},
 		"username":  {username},
 	})
 
-	log.Printf("Yo-ing back %s", username)
+	log.Printf("Yo-ing back %s with handle %s", username, handle)
 
 	if err != nil {
 		log.Printf("yobackHandler: %s", err)
